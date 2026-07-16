@@ -91,7 +91,7 @@ export default function SignatureRequestPage() {
   const application = data.application;
 
   return (
-    <div className="max-w-4xl mx-auto my-10 bg-white shadow rounded-lg p-8 space-y-8">
+    <div className="max-w-4xl mx-auto py-10  bg-white shadow rounded-lg p-8 space-y-8">
       <header className="border-b pb-6 text-center">
         <h1 className="text-2xl font-bold text-brand">COWS CHOICE LIMITED</h1>
         <h2 className="text-lg font-semibold text-gray-700 mt-1">Signature Request</h2>

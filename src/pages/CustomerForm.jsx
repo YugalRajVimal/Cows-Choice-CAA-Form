@@ -149,7 +149,7 @@ export default function CustomerForm() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto my-10 bg-white shadow rounded-lg p-8">
+    <div className="max-w-4xl mx-auto py-10  bg-white shadow rounded-lg p-8">
       <header className="mb-8 text-center border-b pb-6">
         <h1 className="text-2xl font-bold text-brand">COWS CHOICE LIMITED</h1>
         <h2 className="text-lg font-semibold text-gray-700 mt-1">
