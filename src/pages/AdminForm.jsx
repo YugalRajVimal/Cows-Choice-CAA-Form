@@ -1,6 +1,7 @@
 // import { useState } from "react";
 // import api from "../api/axios";
 // import FileUploadField from "../components/FileUploadField";
+// import AdminNav from "../components/AdminNav";
 
 // const emptyRequestedBy = { clientName: "", contactPerson: "", telephone: "", email: "" };
 // const emptyCustomerDetails = {
@@ -64,7 +65,7 @@
 
 // const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
-// export default function CustomerForm() {
+// export default function AdminForm() {
 //   const [requestedBy, setRequestedBy] = useState(emptyRequestedBy);
 //   const [customerDetails, setCustomerDetails] = useState(emptyCustomerDetails);
 //   const [creditAccountDetails, setCreditAccountDetails] = useState(emptyCreditDetails);
@@ -114,9 +115,10 @@
 //         if (file) formData.append(key, file);
 //       });
 
-//       const res = await api.post("/applications", formData, {
+//       const res = await api.post("/admin/form", formData, {
 //         headers: { "Content-Type": "multipart/form-data" },
 //       });
+
 
 //       setSubmittedApplicationId(res.data.applicationId);
 //     } catch (err) {
@@ -126,8 +128,8 @@
 //     }
 //   };
 
-//   const startGoogleVerification = () => {
-//     window.location.href = `${API_BASE}/auth/google/customer_application/${submittedApplicationId}`;
+//   const viewApplication = () => {
+//     window.location.href = `/admin/applications/${submittedApplicationId}`;
 //   };
 
 //   if (submittedApplicationId) {
@@ -139,10 +141,10 @@
 //           with Google and sign the form.
 //         </p>
 //         <button
-//           onClick={startGoogleVerification}
+//           onClick={viewApplication}
 //           className="bg-brand hover:bg-brand-dark text-white font-medium px-6 py-3 rounded-md"
 //         >
-//           Continue to Google Verification &amp; Signature
+//           View Application
 //         </button>
 //       </div>
 //     );
@@ -150,6 +152,7 @@
 
 //   return (
 //     <div className="max-w-4xl mx-auto py-10  bg-white shadow rounded-lg p-8">
+//           <AdminNav />
 //       <header className="mb-8 text-center border-b pb-6">
 //         <h1 className="text-2xl font-bold text-brand">COWS CHOICE LIMITED</h1>
 //         <h2 className="text-lg font-semibold text-gray-700 mt-1">
@@ -300,6 +303,7 @@
 import { useState } from "react";
 import api from "../api/axios";
 import FileUploadField from "../components/FileUploadField";
+import AdminNav from "../components/AdminNav";
 import Button from "../components/ui/Button";
 import { Alert, TextInput } from "../components/ui/Field";
 
@@ -363,9 +367,7 @@ const sampleCreditDetails = {
   deliveryInstructions: "Deliver to goods-in, 8am-4pm Mon-Fri",
 };
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
-
-export default function CustomerForm() {
+export default function AdminForm() {
   const [requestedBy, setRequestedBy] = useState(emptyRequestedBy);
   const [customerDetails, setCustomerDetails] = useState(emptyCustomerDetails);
   const [creditAccountDetails, setCreditAccountDetails] = useState(emptyCreditDetails);
@@ -414,7 +416,7 @@ export default function CustomerForm() {
         if (file) formData.append(key, file);
       });
 
-      const res = await api.post("/applications", formData, {
+      const res = await api.post("/admin/form", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -426,14 +428,15 @@ export default function CustomerForm() {
     }
   };
 
-  const startGoogleVerification = () => {
-    window.location.href = `${API_BASE}/auth/google/customer_application/${submittedApplicationId}`;
+  const viewApplication = () => {
+    window.location.href = `/admin/applications/${submittedApplicationId}`;
   };
 
   if (submittedApplicationId) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-16">
-        <div className="max-w-lg w-full bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_24px_48px_-24px_rgba(15,23,42,0.18)] border border-slate-200/70 rounded-2xl p-10 text-center">
+      <div className="max-w-4xl mx-auto my-8 px-4 sm:px-6">
+        <AdminNav />
+        <div className="max-w-lg mx-auto bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_24px_48px_-24px_rgba(15,23,42,0.18)] border border-slate-200/70 rounded-2xl p-10 text-center">
           <div className="h-14 w-14 rounded-full bg-emerald-100 text-emerald-600 grid place-items-center mx-auto mb-5">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-7 w-7">
               <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -444,8 +447,8 @@ export default function CustomerForm() {
             Your application has been received. To complete the process, please verify your identity
             with Google and sign the form.
           </p>
-          <Button onClick={startGoogleVerification} size="lg" className="w-full mt-7">
-            Continue to Google verification &amp; signature
+          <Button onClick={viewApplication} size="lg" className="w-full mt-7">
+            View application
           </Button>
         </div>
       </div>
@@ -453,136 +456,135 @@ export default function CustomerForm() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_24px_48px_-24px_rgba(15,23,42,0.15)] border border-slate-200/70 rounded-2xl overflow-hidden">
-          <header className="relative bg-gradient-to-br from-brand to-brand-dark text-white px-6 sm:px-10 py-10 text-center overflow-hidden">
-            <div
-              className="absolute inset-0 opacity-[0.08]"
-              style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "24px 24px" }}
-            />
-            <div className="relative">
-              <img
+    <div className="max-w-6xl mx-auto py-10 px-4 sm:px-6">
+      <AdminNav />
+
+      <div className="bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_24px_48px_-24px_rgba(15,23,42,0.15)] border border-slate-200/70 rounded-2xl overflow-hidden">
+        <header className="relative bg-gradient-to-br from-brand to-brand-dark text-white px-6 sm:px-10 py-10 text-center overflow-hidden">
+          <div
+            className="absolute inset-0 opacity-[0.08]"
+            style={{ backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "24px 24px" }}
+          />
+          <div className="relative">
+          <img
                 src="/logo.png"
                 alt="Cows Choice Logo"
                 className="mx-auto mb-5 h-40 rounded-lg shadow-lg object-cover bg-white"
                 style={{ backgroundColor: "white" }}
               />
-        
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">COWS CHOICE LIMITED</h1>
-              <h2 className="text-base sm:text-lg font-medium text-white/90 mt-2">
-                Customer Account Application Form
-              </h2>
-              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-white/70 mt-4">
-                <span>45 Fitzroy St, London W1T 6EB</span>
-                <span className="hidden sm:inline">&middot;</span>
-                <span>info@cowschoice.com</span>
-                <span className="hidden sm:inline">&middot;</span>
-                <span>VAT Reg. No. 51 4149 706</span>
-              </div>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">COWS CHOICE LIMITED</h1>
+            <h2 className="text-base sm:text-lg font-medium text-white/90 mt-2">
+              Customer Account Application Form
+            </h2>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-white/70 mt-4">
+              <span>45 Fitzroy St, London W1T 6EB</span>
+              <span className="hidden sm:inline">&middot;</span>
+              <span>info@cowschoice.com</span>
+              <span className="hidden sm:inline">&middot;</span>
+              <span>VAT Reg. No. 51 4149 706</span>
             </div>
-          </header>
-
-          <div className="p-6 sm:p-10">
-            <div className="mb-6 flex justify-end">
-              <button
-                type="button"
-                onClick={fillSampleData}
-                className="text-xs font-semibold text-slate-500 border border-slate-200 rounded-lg px-3.5 py-2 hover:border-slate-300 hover:bg-slate-50 transition"
-              >
-                Fill sample data
-              </button>
-            </div>
-
-            {error && (
-              <div className="mb-8">
-                <Alert type="error">{error}</Alert>
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-10">
-              <Section index="01" title="Requested By">
-                <Grid>
-                  <TextInput label="Client Name" value={requestedBy.clientName} onChange={(e) => updateField(setRequestedBy)("clientName", e.target.value)} required />
-                  <TextInput label="Contact Person" value={requestedBy.contactPerson} onChange={(e) => updateField(setRequestedBy)("contactPerson", e.target.value)} required />
-                  <TextInput label="Telephone" value={requestedBy.telephone} onChange={(e) => updateField(setRequestedBy)("telephone", e.target.value)} required />
-                  <TextInput label="Email" type="email" value={requestedBy.email} onChange={(e) => updateField(setRequestedBy)("email", e.target.value)} required />
-                </Grid>
-              </Section>
-
-              <Section index="02" title="Customer Details">
-                <Grid>
-                  <TextInput label="Company Name" value={customerDetails.companyName} onChange={(e) => updateField(setCustomerDetails)("companyName", e.target.value)} required />
-                  <TextInput label="Company Registration Number" value={customerDetails.companyRegistrationNumber} onChange={(e) => updateField(setCustomerDetails)("companyRegistrationNumber", e.target.value)} required />
-                  <TextInput label="VAT Number" value={customerDetails.vatNumber} onChange={(e) => updateField(setCustomerDetails)("vatNumber", e.target.value)} />
-                  <TextInput label="EORI Number (if applicable)" value={customerDetails.eoriNumber} onChange={(e) => updateField(setCustomerDetails)("eoriNumber", e.target.value)} />
-                  <TextInput label="Account Number (if applicable)" value={customerDetails.accountNumber} onChange={(e) => updateField(setCustomerDetails)("accountNumber", e.target.value)} />
-                  <TextInput label="Registered Address" value={customerDetails.registeredAddress} onChange={(e) => updateField(setCustomerDetails)("registeredAddress", e.target.value)} required />
-                  <TextInput label="Invoice Address" value={customerDetails.invoiceAddress} onChange={(e) => updateField(setCustomerDetails)("invoiceAddress", e.target.value)} required />
-                  <TextInput label="Delivery Address (if different)" value={customerDetails.deliveryAddress} onChange={(e) => updateField(setCustomerDetails)("deliveryAddress", e.target.value)} />
-                  <TextInput label="Post Code" value={customerDetails.postCode} onChange={(e) => updateField(setCustomerDetails)("postCode", e.target.value)} required />
-                  <TextInput label="Country" value={customerDetails.country} onChange={(e) => updateField(setCustomerDetails)("country", e.target.value)} required />
-                  <TextInput label="Accounts Contact" value={customerDetails.accountsContact} onChange={(e) => updateField(setCustomerDetails)("accountsContact", e.target.value)} required />
-                  <TextInput label="Accounts Email" type="email" value={customerDetails.accountsEmail} onChange={(e) => updateField(setCustomerDetails)("accountsEmail", e.target.value)} required />
-                  <TextInput label="Purchasing Contact" value={customerDetails.purchasingContact} onChange={(e) => updateField(setCustomerDetails)("purchasingContact", e.target.value)} required />
-                  <TextInput label="Purchasing Email" type="email" value={customerDetails.purchasingEmail} onChange={(e) => updateField(setCustomerDetails)("purchasingEmail", e.target.value)} required />
-                  <TextInput label="Telephone" value={customerDetails.telephone} onChange={(e) => updateField(setCustomerDetails)("telephone", e.target.value)} required />
-                </Grid>
-              </Section>
-
-              <Section index="03" title="Credit & Account Details">
-                <Grid>
-                  <TextInput label="Expected Monthly Purchases" value={creditAccountDetails.expectedMonthlyPurchases} onChange={(e) => updateField(setCreditAccountDetails)("expectedMonthlyPurchases", e.target.value)} required />
-                  <TextInput label="Credit Terms Requested" value={creditAccountDetails.creditTermsRequested} onChange={(e) => updateField(setCreditAccountDetails)("creditTermsRequested", e.target.value)} required />
-                  <TextInput label="Credit Limit Requested" value={creditAccountDetails.creditLimitRequested} onChange={(e) => updateField(setCreditAccountDetails)("creditLimitRequested", e.target.value)} required />
-                  <TextInput label="Preferred Payment Method" value={creditAccountDetails.preferredPaymentMethod} onChange={(e) => updateField(setCreditAccountDetails)("preferredPaymentMethod", e.target.value)} required />
-                  <TextInput label="Accounts Payable Contact" value={creditAccountDetails.accountsPayableContact} onChange={(e) => updateField(setCreditAccountDetails)("accountsPayableContact", e.target.value)} required />
-                  <TextInput label="Delivery Instructions" value={creditAccountDetails.deliveryInstructions} onChange={(e) => updateField(setCreditAccountDetails)("deliveryInstructions", e.target.value)} />
-                </Grid>
-              </Section>
-
-              <Section index="04" title="Supporting Documents">
-                <Grid>
-                  <FileUploadField label="Company Letterhead" name="companyLetterhead" file={files.companyLetterhead} onChange={handleFileChange} />
-                  <FileUploadField label="Purchase Order" name="purchaseOrder" file={files.purchaseOrder} onChange={handleFileChange} />
-                  <FileUploadField label="Certificate of Incorporation" name="certificateOfIncorporation" file={files.certificateOfIncorporation} onChange={handleFileChange} />
-                  <FileUploadField label="VAT Certificate" name="vatCertificate" file={files.vatCertificate} onChange={handleFileChange} />
-                </Grid>
-              </Section>
-
-              <section className="bg-slate-50 rounded-2xl border border-slate-100 p-6">
-                <h3 className="text-base font-bold text-slate-900 mb-3">GDPR Statement</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Cows Choice Limited processes the information provided on this form for customer account
-                  setup, credit administration, order fulfilment, invoicing, legal compliance and customer
-                  support. Your information is processed in accordance with the UK GDPR and the Data
-                  Protection Act 2018. We only share information where legally required or with trusted
-                  service providers acting on our behalf. You may request access to, correction of or
-                  deletion of your personal data, subject to applicable legal obligations.
-                </p>
-
-                <p className="text-sm font-semibold text-slate-800 mt-5">Customer Declaration</p>
-                <p className="text-sm text-slate-600 leading-relaxed mt-1">
-                  I/We certify that the information provided is accurate and complete and agree to abide by
-                  Cows Choice Limited's Terms and Conditions of Sale and agreed payment terms.
-                </p>
-
-                <label className="flex items-start gap-2.5 mt-4 text-sm text-slate-700 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={declarationAccepted}
-                    onChange={(e) => setDeclarationAccepted(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 text-brand border-slate-300 rounded focus:ring-brand/30"
-                  />
-                  I/We accept the declaration above
-                </label>
-              </section>
-
-              <Button type="submit" loading={loading} loadingText="Submitting..." size="lg" className="w-full">
-                Submit Application
-              </Button>
-            </form>
           </div>
+        </header>
+
+        <div className="p-6 sm:p-10">
+          <div className="mb-6 flex justify-end">
+            <button
+              type="button"
+              onClick={fillSampleData}
+              className="text-xs font-semibold text-slate-500 border border-slate-200 rounded-lg px-3.5 py-2 hover:border-slate-300 hover:bg-slate-50 transition"
+            >
+              Fill sample data
+            </button>
+          </div>
+
+          {error && (
+            <div className="mb-8">
+              <Alert type="error">{error}</Alert>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-10">
+            <Section index="01" title="Requested By">
+              <Grid>
+                <TextInput label="Client Name" value={requestedBy.clientName} onChange={(e) => updateField(setRequestedBy)("clientName", e.target.value)} required />
+                <TextInput label="Contact Person" value={requestedBy.contactPerson} onChange={(e) => updateField(setRequestedBy)("contactPerson", e.target.value)} required />
+                <TextInput label="Telephone" value={requestedBy.telephone} onChange={(e) => updateField(setRequestedBy)("telephone", e.target.value)} required />
+                <TextInput label="Email" type="email" value={requestedBy.email} onChange={(e) => updateField(setRequestedBy)("email", e.target.value)} required />
+              </Grid>
+            </Section>
+
+            <Section index="02" title="Customer Details">
+              <Grid>
+                <TextInput label="Company Name" value={customerDetails.companyName} onChange={(e) => updateField(setCustomerDetails)("companyName", e.target.value)} required />
+                <TextInput label="Company Registration Number" value={customerDetails.companyRegistrationNumber} onChange={(e) => updateField(setCustomerDetails)("companyRegistrationNumber", e.target.value)} required />
+                <TextInput label="VAT Number" value={customerDetails.vatNumber} onChange={(e) => updateField(setCustomerDetails)("vatNumber", e.target.value)} />
+                <TextInput label="EORI Number (if applicable)" value={customerDetails.eoriNumber} onChange={(e) => updateField(setCustomerDetails)("eoriNumber", e.target.value)} />
+                <TextInput label="Account Number (if applicable)" value={customerDetails.accountNumber} onChange={(e) => updateField(setCustomerDetails)("accountNumber", e.target.value)} />
+                <TextInput label="Registered Address" value={customerDetails.registeredAddress} onChange={(e) => updateField(setCustomerDetails)("registeredAddress", e.target.value)} required />
+                <TextInput label="Invoice Address" value={customerDetails.invoiceAddress} onChange={(e) => updateField(setCustomerDetails)("invoiceAddress", e.target.value)} required />
+                <TextInput label="Delivery Address (if different)" value={customerDetails.deliveryAddress} onChange={(e) => updateField(setCustomerDetails)("deliveryAddress", e.target.value)} />
+                <TextInput label="Post Code" value={customerDetails.postCode} onChange={(e) => updateField(setCustomerDetails)("postCode", e.target.value)} required />
+                <TextInput label="Country" value={customerDetails.country} onChange={(e) => updateField(setCustomerDetails)("country", e.target.value)} required />
+                <TextInput label="Accounts Contact" value={customerDetails.accountsContact} onChange={(e) => updateField(setCustomerDetails)("accountsContact", e.target.value)} required />
+                <TextInput label="Accounts Email" type="email" value={customerDetails.accountsEmail} onChange={(e) => updateField(setCustomerDetails)("accountsEmail", e.target.value)} required />
+                <TextInput label="Purchasing Contact" value={customerDetails.purchasingContact} onChange={(e) => updateField(setCustomerDetails)("purchasingContact", e.target.value)} required />
+                <TextInput label="Purchasing Email" type="email" value={customerDetails.purchasingEmail} onChange={(e) => updateField(setCustomerDetails)("purchasingEmail", e.target.value)} required />
+                <TextInput label="Telephone" value={customerDetails.telephone} onChange={(e) => updateField(setCustomerDetails)("telephone", e.target.value)} required />
+              </Grid>
+            </Section>
+
+            <Section index="03" title="Credit & Account Details">
+              <Grid>
+                <TextInput label="Expected Monthly Purchases" value={creditAccountDetails.expectedMonthlyPurchases} onChange={(e) => updateField(setCreditAccountDetails)("expectedMonthlyPurchases", e.target.value)} required />
+                <TextInput label="Credit Terms Requested" value={creditAccountDetails.creditTermsRequested} onChange={(e) => updateField(setCreditAccountDetails)("creditTermsRequested", e.target.value)} required />
+                <TextInput label="Credit Limit Requested" value={creditAccountDetails.creditLimitRequested} onChange={(e) => updateField(setCreditAccountDetails)("creditLimitRequested", e.target.value)} required />
+                <TextInput label="Preferred Payment Method" value={creditAccountDetails.preferredPaymentMethod} onChange={(e) => updateField(setCreditAccountDetails)("preferredPaymentMethod", e.target.value)} required />
+                <TextInput label="Accounts Payable Contact" value={creditAccountDetails.accountsPayableContact} onChange={(e) => updateField(setCreditAccountDetails)("accountsPayableContact", e.target.value)} required />
+                <TextInput label="Delivery Instructions" value={creditAccountDetails.deliveryInstructions} onChange={(e) => updateField(setCreditAccountDetails)("deliveryInstructions", e.target.value)} />
+              </Grid>
+            </Section>
+
+            <Section index="04" title="Supporting Documents">
+              <Grid>
+                <FileUploadField label="Company Letterhead" name="companyLetterhead" file={files.companyLetterhead} onChange={handleFileChange} />
+                <FileUploadField label="Purchase Order" name="purchaseOrder" file={files.purchaseOrder} onChange={handleFileChange} />
+                <FileUploadField label="Certificate of Incorporation" name="certificateOfIncorporation" file={files.certificateOfIncorporation} onChange={handleFileChange} />
+                <FileUploadField label="VAT Certificate" name="vatCertificate" file={files.vatCertificate} onChange={handleFileChange} />
+              </Grid>
+            </Section>
+
+            <section className="bg-slate-50 rounded-2xl border border-slate-100 p-6">
+              <h3 className="text-base font-bold text-slate-900 mb-3">GDPR Statement</h3>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Cows Choice Limited processes the information provided on this form for customer account
+                setup, credit administration, order fulfilment, invoicing, legal compliance and customer
+                support. Your information is processed in accordance with the UK GDPR and the Data
+                Protection Act 2018. We only share information where legally required or with trusted
+                service providers acting on our behalf. You may request access to, correction of or
+                deletion of your personal data, subject to applicable legal obligations.
+              </p>
+
+              <p className="text-sm font-semibold text-slate-800 mt-5">Customer Declaration</p>
+              <p className="text-sm text-slate-600 leading-relaxed mt-1">
+                I/We certify that the information provided is accurate and complete and agree to abide by
+                Cows Choice Limited's Terms and Conditions of Sale and agreed payment terms.
+              </p>
+
+              <label className="flex items-start gap-2.5 mt-4 text-sm text-slate-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={declarationAccepted}
+                  onChange={(e) => setDeclarationAccepted(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 text-brand border-slate-300 rounded focus:ring-brand/30"
+                />
+                I/We accept the declaration above
+              </label>
+            </section>
+
+            <Button type="submit" loading={loading} loadingText="Submitting..." size="lg" className="w-full">
+              Submit Application
+            </Button>
+          </form>
         </div>
       </div>
     </div>
